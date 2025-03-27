@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - PostPal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Left panel with tabs -->
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Dashboard</h4>
+            </div>
+            <div class="list-group list-group-flush" id="dashboard-tabs" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="dashboard-tab" data-bs-toggle="list" href="#dashboard-content" role="tab" aria-controls="dashboard-content">Overview</a>
+                <a class="list-group-item list-group-item-action" id="settings-tab" data-bs-toggle="list" href="#settings-content" role="tab" aria-controls="settings-content">Settings</a>
+                <a class="list-group-item list-group-item-action" id="preferences-tab" data-bs-toggle="list" href="#preferences-content" role="tab" aria-controls="preferences-content">Preferences</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>User Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Email:</strong> {{ current_user.email }}</p>
+                <p><strong>User ID:</strong> {{ current_user.id }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main content area -->
+    <div class="col-md-9">
+        <div class="tab-content">
+            <!-- Overview tab content -->
+            <div class="tab-pane fade show active" id="dashboard-content" role="tabpanel" aria-labelledby="dashboard-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Welcome to your Dashboard</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4>Welcome, {{ current_user.email }}!</h4>
+                        <p>This is a protected page that only authenticated users can access.</p>
+                        
+                        <div class="alert alert-info">
+                            <p>Use the tabs on the left to navigate between different sections.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings tab content -->
+            <div class="tab-pane fade" id="settings-content" role="tabpanel" aria-labelledby="settings-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4>Account Settings</h4>
+                        
+                        <form>
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" placeholder="Enter your full name">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" value="{{ current_user.email }}" disabled>
+                                <div class="form-text">Email address cannot be changed.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="currentPassword" placeholder="Enter current password">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="newPassword" placeholder="Enter new password">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Profile Picture Upload Section (moved to bottom) -->
+                        <h5 class="mb-2">Profile Picture</h5>
+                        <div class="avatar-upload-container">
+                            {% if current_user.avatar_url %}
+                            <img src="{{ current_user.avatar_url }}" alt="Avatar" class="avatar-preview" id="avatar-preview">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='img/default-avatar.png') }}" alt="Avatar" class="avatar-preview" id="avatar-preview">
+                            {% endif %}
+                            
+                            <form action="{{ url_for('upload_avatar') }}" method="POST" enctype="multipart/form-data" class="avatar-upload-form">
+                                <div class="file-upload mb-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary file-upload-btn">Choose Image</button>
+                                    <input type="file" name="avatar" id="avatar-upload" accept="image/*,.apng" class="file-upload-input" required>
+                                </div>
+                                <div class="form-text" id="selected-file-name">No file selected</div>
+                                <div class="form-text">Supported: PNG, JPEG, GIF. Max: 5MB</div>
+                                <button type="submit" class="btn btn-sm btn-success mt-2">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preferences tab content -->
+            <div class="tab-pane fade" id="preferences-content" role="tabpanel" aria-labelledby="preferences-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Content Strategy Preferences</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="content-preferences-form">
+                            <!-- Tone and Voice -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Tone and Voice</label>
+                                <div class="form-text mb-2">Select your preferred tone for content creation.</div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="toneVoice" id="tone-professional" value="professional" checked>
+                                            <label class="form-check-label" for="tone-professional">Professional</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="toneVoice" id="tone-casual" value="casual">
+                                            <label class="form-check-label" for="tone-casual">Casual</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="toneVoice" id="tone-humorous" value="humorous">
+                                            <label class="form-check-label" for="tone-humorous">Humorous</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="toneVoice" id="tone-inspirational" value="inspirational">
+                                            <label class="form-check-label" for="tone-inspirational">Inspirational</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="toneVoice" id="tone-edgy" value="edgy">
+                                            <label class="form-check-label" for="tone-edgy">Edgy</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="toneVoice" id="tone-empathetic" value="empathetic">
+                                            <label class="form-check-label" for="tone-empathetic">Empathetic</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Content Type Preferences -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Content Type Preferences</label>
+                                <div class="form-text mb-2">Select the types of content you'd like to include (select multiple).</div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="contentTypes" id="content-motivational" value="motivational" checked>
+                                            <label class="form-check-label" for="content-motivational">Motivational Quotes</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="contentTypes" id="content-industry" value="industry">
+                                            <label class="form-check-label" for="content-industry">Industry News</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="contentTypes" id="content-product" value="product">
+                                            <label class="form-check-label" for="content-product">Product Highlights</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="contentTypes" id="content-bts" value="behindScenes">
+                                            <label class="form-check-label" for="content-bts">Behind-the-Scenes</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="contentTypes" id="content-ugc" value="userGenerated">
+                                            <label class="form-check-label" for="content-ugc">User-Generated Content</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="contentTypes" id="content-educational" value="educational">
+                                            <label class="form-check-label" for="content-educational">Educational Content</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Brand Values -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Brand Values</label>
+                                <div class="form-text mb-2">Which values are important to highlight in your content? (select multiple)</div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="brandValues" id="value-sustainability" value="sustainability">
+                                            <label class="form-check-label" for="value-sustainability">Sustainability</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="brandValues" id="value-innovation" value="innovation" checked>
+                                            <label class="form-check-label" for="value-innovation">Innovation</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="brandValues" id="value-community" value="community">
+                                            <label class="form-check-label" for="value-community">Community</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="brandValues" id="value-inclusivity" value="inclusivity">
+                                            <label class="form-check-label" for="value-inclusivity">Inclusivity</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="brandValues" id="value-quality" value="quality">
+                                            <label class="form-check-label" for="value-quality">Quality</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="brandValues" id="value-authenticity" value="authenticity">
+                                            <label class="form-check-label" for="value-authenticity">Authenticity</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Competitor Mentioning -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Competitor Mentioning</label>
+                                <div class="form-text mb-2">How would you like to handle competitors in your content?</div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="competitorMentioning" id="competitor-avoid" value="avoid" checked>
+                                    <label class="form-check-label" for="competitor-avoid">Avoid mentioning competitors</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="competitorMentioning" id="competitor-engage" value="engage">
+                                    <label class="form-check-label" for="competitor-engage">Engage with competitors' content</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Hashtag Strategy -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Hashtags</label>
+                                <div class="form-text mb-2">Add hashtags for your content (type and press Enter)</div>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="hashtag-input" placeholder="Type a hashtag and press Enter">
+                                </div>
+                                <div id="hashtags-container" class="d-flex flex-wrap gap-2 mb-3">
+                                    <!-- Hashtags will be added here dynamically -->
+                                </div>
+                                <input type="hidden" id="hashtags-hidden" name="hashtags" value="">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Save Preferences</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Bootstrap tabs initialization
+    document.addEventListener('DOMContentLoaded', function () {
+        var triggerTabList = [].slice.call(document.querySelectorAll('#dashboard-tabs a'));
+        triggerTabList.forEach(function (triggerEl) {
+            var tabTrigger = new bootstrap.Tab(triggerEl);
+            
+            triggerEl.addEventListener('click', function (event) {
+                event.preventDefault();
+                tabTrigger.show();
+            });
+        });
+        
+        // Handle direct link to settings tab
+        if (window.location.hash === '#settings-content') {
+            document.getElementById('settings-tab').click();
+        }
+        
+        // File upload preview and filename display
+        const avatarUpload = document.getElementById('avatar-upload');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const selectedFileName = document.getElementById('selected-file-name');
+        
+        if (avatarUpload && avatarPreview && selectedFileName) {
+            avatarUpload.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    selectedFileName.textContent = file.name;
+                    
+                    // Create image preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        avatarPreview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    selectedFileName.textContent = 'No file selected';
+                }
+            });
+        }
+        
+        // Hashtag input functionality
+        const hashtagInput = document.getElementById('hashtag-input');
+        const hashtagsContainer = document.getElementById('hashtags-container');
+        const hashtagsHidden = document.getElementById('hashtags-hidden');
+        let hashtags = [];
+        
+        if (hashtagInput && hashtagsContainer && hashtagsHidden) {
+            // Function to render hashtags
+            function renderHashtags() {
+                hashtagsContainer.innerHTML = '';
+                hashtags.forEach(tag => {
+                    const tagElement = document.createElement('div');
+                    tagElement.className = 'badge bg-primary me-1 mb-1 p-2';
+                    tagElement.innerHTML = `${tag} <span class="ms-1 badge bg-danger" style="cursor: pointer;" data-tag="${tag}">&times;</span>`;
+                    hashtagsContainer.appendChild(tagElement);
+                });
+                
+                // Update hidden field value
+                hashtagsHidden.value = JSON.stringify(hashtags);
+            }
+            
+            // Add hashtag when Enter key is pressed
+            hashtagInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const tag = this.value.trim();
+                    
+                    if (tag && !tag.includes(' ') && !hashtags.includes(tag)) {
+                        // Format hashtag to ensure it starts with #
+                        const formattedTag = tag.startsWith('#') ? tag : `#${tag}`;
+                        hashtags.push(formattedTag);
+                        renderHashtags();
+                        this.value = '';
+                    }
+                }
+            });
+            
+            // Remove hashtag when X is clicked
+            hashtagsContainer.addEventListener('click', function(e) {
+                if (e.target.tagName === 'SPAN') {
+                    const tagToRemove = e.target.getAttribute('data-tag');
+                    hashtags = hashtags.filter(tag => tag !== tagToRemove);
+                    renderHashtags();
+                }
+            });
+            
+            // Add some default hashtags for demo
+            hashtags = ['#marketing', '#business'];
+            renderHashtags();
+        }
+        
+        // Form submission
+        const contentPreferencesForm = document.getElementById('content-preferences-form');
+        if (contentPreferencesForm) {
+            contentPreferencesForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Collect form data
+                const formData = new FormData(this);
+                const preferences = {};
+                
+                // Process checkboxes (multiple selections)
+                const checkboxGroups = ['contentTypes', 'brandValues'];
+                checkboxGroups.forEach(group => {
+                    const checkboxes = document.querySelectorAll(`input[name="${group}"]:checked`);
+                    preferences[group] = Array.from(checkboxes).map(cb => cb.value);
+                });
+                
+                // Process radio buttons (single selections)
+                const radioGroups = ['toneVoice', 'competitorMentioning'];
+                radioGroups.forEach(group => {
+                    const selected = document.querySelector(`input[name="${group}"]:checked`);
+                    preferences[group] = selected ? selected.value : null;
+                });
+                
+                // Add hashtags
+                preferences['hashtags'] = hashtags;
+                
+                // Log the collected preferences (replace with actual API call)
+                console.log('Content Preferences:', preferences);
+                
+                // Show success message
+                alert('Preferences saved successfully!');
+            });
+        }
+    });
+</script>
+{% endblock %} 

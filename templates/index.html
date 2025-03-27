@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}PostPal - AI-Powered Social Media for Local Businesses{% endblock %}
+
+{% block content %}
+<div class="hero-section mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+                <h1 class="display-3 fw-bold">Social Media on Autopilot</h1>
+                <p class="lead fs-4 mb-4">Better-than-human content, for a fraction of the cost — with zero babysitting.</p>
+                
+                <div class="d-flex justify-content-center justify-content-lg-start gap-3">
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('signup') }}" role="button">Start Free Trial</a>
+                    <a class="btn btn-outline-primary btn-lg" href="{{ url_for('login') }}" role="button">Login</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{{ url_for('static', filename='img/pp_team_nobg.png') }}" alt="PostPal Team" class="hero-team-image img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-6 col-lg-3">
+        <div class="feature-card h-100 p-4 text-center">
+            <div class="feature-icon mb-3">
+                <i class="bi bi-calendar-check fs-1"></i>
+            </div>
+            <h3 class="h4">Always-On Presence</h3>
+            <p>Daily content tailored to your business—automatically. No briefings, no approvals, just results.</p>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="feature-card h-100 p-4 text-center">
+            <div class="feature-icon mb-3">
+                <i class="bi bi-piggy-bank fs-1"></i>
+            </div>
+            <h3 class="h4">Smarter & Cheaper</h3>
+            <p>More effective than a VA, more affordable than an intern—without sick days or missed deadlines.</p>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="feature-card h-100 p-4 text-center">
+            <div class="feature-icon mb-3">
+                <i class="bi bi-graph-up-arrow fs-1"></i>
+            </div>
+            <h3 class="h4">Consistent Quality</h3>
+            <p>Every post has strategy built in: engagement hooks, local relevance, and brand consistency.</p>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="feature-card h-100 p-4 text-center">
+            <div class="feature-icon mb-3">
+                <i class="bi bi-boxes fs-1"></i>
+            </div>
+            <h3 class="h4">Scalable Simplicity</h3>
+            <p>Whether you're a solo yoga studio or a chain of barbershops, it's plug-and-play—just results.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row align-items-center mb-5">
+    <div class="col-lg-6">
+        <h2 class="display-6 fw-bold mb-4">How It Works</h2>
+        <div class="d-flex mb-3">
+            <div class="step-number me-3">1</div>
+            <div>
+                <h4>Connect your social accounts</h4>
+                <p>Link your Facebook, Instagram, Twitter, and LinkedIn business profiles.</p>
+            </div>
+        </div>
+        <div class="d-flex mb-3">
+            <div class="step-number me-3">2</div>
+            <div>
+                <h4>Tell us about your business</h4>
+                <p>Answer a few simple questions about your services and target audience.</p>
+            </div>
+        </div>
+        <div class="d-flex mb-3">
+            <div class="step-number me-3">3</div>
+            <div>
+                <h4>Choose your posting schedule</h4>
+                <p>Select Autopilot for hands-off posting or Custom for content approval.</p>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="step-number me-3">4</div>
+            <div>
+                <h4>Watch your social presence grow</h4>
+                <p>Our AI takes care of the rest, learning and improving over time.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mt-4 mt-lg-0 d-flex align-items-center justify-content-center">
+        <div class="logo-character-container">
+            <img src="{{ url_for('static', filename='img/logo_character_no_background.png') }}" alt="PostPal Character" class="logo-character img-fluid">
+        </div>
+    </div>
+</div>
+
+<div class="testimonial-section py-5 mb-5 text-center">
+    <h2 class="display-6 fw-bold mb-4">What Our Customers Say</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="testimonial-card p-4">
+                <div class="stars mb-3">★★★★★</div>
+                <p class="testimonial-text">"I was spending 5 hours a week on social media. Now PostPal does it better than I ever could, and I can focus on my clients."</p>
+                <p class="testimonial-author">— Sarah J., Yoga Studio Owner</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="testimonial-card p-4">
+                <div class="stars mb-3">★★★★★</div>
+                <p class="testimonial-text">"Our engagement has gone up 37% since switching to PostPal. The AI somehow knows exactly what our customers want to see."</p>
+                <p class="testimonial-author">— Mike T., Barbershop Chain</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="testimonial-card p-4">
+                <div class="stars mb-3">★★★★★</div>
+                <p class="testimonial-text">"I tried hiring social media managers, but PostPal is more consistent, more creative, and costs a fraction of the price."</p>
+                <p class="testimonial-author">— Elena R., Boutique Owner</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section text-center py-5">
+    <h2 class="display-6 fw-bold mb-3">Ready to Put Your Social Media on Autopilot?</h2>
+    <p class="lead mb-4">Join thousands of local businesses saving time and growing their online presence.</p>
+    <a class="btn btn-primary btn-lg px-5" href="{{ url_for('signup') }}" role="button">Start Your Free 14-Day Trial</a>
+    <p class="mt-3">No credit card required. Cancel anytime.</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Any additional JavaScript can go here
+</script>
+{% endblock %} 
